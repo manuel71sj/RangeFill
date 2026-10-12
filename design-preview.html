@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>RangeFill · 화면 디자인 시안</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: var(--background, light-dark(#f5f6f3, #141916));
+      --ink: var(--foreground, light-dark(#202b25, #e9f0eb));
+      --surface: var(--card, light-dark(#ffffff, #202923));
+      --quiet: var(--muted-foreground, light-dark(#626f66, #abb8ae));
+      --line: var(--border, light-dark(#dce3dd, #3e4b41));
+      --green: var(--primary, light-dark(#285d43, #b6dec5));
+      --soft: var(--accent, light-dark(#e8f1e9, #2b3d30));
+      --error: var(--destructive, light-dark(#ad3027, #ffa79c));
+      font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--ink); background: var(--bg);
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    button, input { font: inherit; }
+    button, summary { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button, input { min-height: 48px; }
+    :focus-visible { outline: 3px solid var(--green); outline-offset: 4px; }
+    .app { max-width: 480px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom)); }
+    header { display: flex; align-items: center; gap: 10px; margin-bottom: 36px; }
+    .mark { background: var(--green); color: var(--bg); width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; }
+    .mark svg { width: 23px; height: 23px; }
+    .brand { font-size: 20px; font-weight: 750; letter-spacing: -.6px; }
+    .badge { margin-left: auto; color: var(--quiet); font-size: 11px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 20px; }
+    h1 { font-size: 28px; line-height: 1.4; letter-spacing: -1.1px; margin: 0 0 8px; }
+    .intro { color: var(--quiet); font-size: 14px; margin: 0 0 28px; line-height: 1.7; word-break: keep-all; }
+    .label { display: block; font-size: 14px; font-weight: 650; margin-bottom: 10px; }
+    .entry { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 16px; padding: 10px 20px; background: var(--surface); }
+    .entry:focus-within { border-color: var(--green); box-shadow: 0 0 0 2px var(--soft); }
+    .entry input { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--ink); outline: none; font-size: 36px; font-weight: 650; font-variant-numeric: tabular-nums; }
+    .unit { color: var(--quiet); font-size: 16px; flex-shrink: 0; }
+    .hint { margin: 8px 0 24px; color: var(--quiet); font-size: 12px; line-height: 1.6; }
+    .result { background: var(--soft); border: 1px solid var(--line); border-radius: 24px; padding: 26px 24px 22px; }
+    .eyebrow { color: var(--green); font-size: 13px; font-weight: 650; margin: 0 0 12px; }
+    .amount { font-size: clamp(34px, 10vw, 48px); font-weight: 750; letter-spacing: -1.8px; line-height: 1.2; color: var(--green); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .won { font-size: 21px; font-weight: 550; letter-spacing: 0; margin-left: 5px; }
+    .result-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--line); margin-top: 22px; padding-top: 17px; font-size: 14px; }
+    .result-row span { color: var(--quiet); }
+    .result-row strong { font-size: 18px; font-variant-numeric: tabular-nums; }
+    .journey { display: flex; align-items: center; gap: 8px; color: var(--quiet); font-size: 12px; margin: 18px 0 26px; }
+    .journey span:last-child { margin-left: auto; }
+    .track { flex: 1; height: 5px; border-radius: 8px; background: var(--line); overflow: hidden; }
+    .fill { width: 25%; height: 100%; background: var(--green); border-radius: inherit; }
+    details { border-top: 1px solid var(--line); }
+    summary { list-style: none; display: flex; align-items: center; gap: 8px; min-height: 64px; font-size: 14px; font-weight: 650; }
+    summary::-webkit-details-marker { display: none; }
+    .chevron { margin-left: auto; font-size: 18px; color: var(--quiet); }
+    details[open] .chevron { transform: rotate(180deg); }
+    .settings-note { margin: 0 0 20px; color: var(--quiet); font-size: 12px; line-height: 1.7; }
+    .field { margin-bottom: 16px; }
+    .field .label { font-size: 13px; margin-bottom: 7px; }
+    .field .entry { padding: 4px 14px; border-radius: 12px; }
+    .field input { font-size: 19px; font-weight: 550; }
+    .field .unit { font-size: 13px; }
+    .save { width: 100%; border: 0; border-radius: 12px; background: var(--green); color: var(--bg); font-size: 14px; font-weight: 650; margin: 2px 0 12px; }
+    .save:active { opacity: .8; }
+    #message { margin: 0; min-height: 20px; color: var(--green); font-size: 12px; line-height: 1.6; }
+    #error { color: var(--error); font-size: 13px; margin: 0 0 16px; line-height: 1.6; }
+    #error:empty { display: none; }
+    footer { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 18px; font-size: 11px; color: var(--quiet); line-height: 1.8; }
+    footer p { margin: 0; }
+    @media (min-width: 600px) { .app { padding-top: 48px; } }
+    @media (max-width: 350px) { .app { padding-inline: 18px; } .result { padding-inline: 20px; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M7 7h5v5H7zM14 12h2a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0V9l-3-3m1 1v4h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="brand">RangeFill</span><span class="badge">디자인 시안</span>
+    </header>
+    <h1>이번엔 얼마를 넣을까요?</h1>
+    <p class="intro">남은 거리를 입력하면<br>가득 채우는 데 필요한 금액을 알려드려요.</p>
+    <label class="label" for="remaining">현재 남은 주행가능거리</label>
+    <div class="entry"><input id="remaining" type="text" inputmode="decimal" value="150" placeholder="예: 150" autocomplete="off" aria-describedby="remaining-hint error"><span class="unit">km</span></div>
+    <p class="hint" id="remaining-hint">차량 계기판에 표시된 거리를 입력하세요.</p>
+    <p id="error" role="alert"></p>
+    <section class="result" aria-label="주유 계산 결과" aria-live="polite" aria-atomic="true">
+      <p class="eyebrow">예상 주유금액</p>
+      <div class="amount"><span id="cost">51,000</span><span class="won" id="currency">원</span></div>
+      <div class="result-row"><span>필요 주유량</span><strong id="liters">30.00 L</strong></div>
+    </section>
+    <div class="journey" aria-hidden="true"><span id="from">150 km</span><div class="track"><div class="fill" id="fill"></div></div><span id="to">목표 600 km</span></div>
+    <details id="settings">
+      <summary>계산 기준 설정<span class="chevron" aria-hidden="true">⌄</span></summary>
+      <p class="settings-note">최대 거리와 연비는 차량에 맞게 설정하세요.<br>주유단가는 방문할 주유소의 가격으로 바꿔주세요.</p>
+      <form id="settings-form" novalidate>
+        <div class="field"><label class="label" for="maximum">최대 주유 시 주행가능거리</label><div class="entry"><input id="maximum" type="text" inputmode="decimal" value="600" autocomplete="off"><span class="unit">km</span></div></div>
+        <div class="field"><label class="label" for="efficiency">연비</label><div class="entry"><input id="efficiency" type="text" inputmode="decimal" value="15" autocomplete="off"><span class="unit">km/L</span></div></div>
+        <div class="field"><label class="label" for="price">주유단가</label><div class="entry"><input id="price" type="text" inputmode="decimal" value="1700" autocomplete="off"><span class="unit">원/L</span></div></div>
+        <button type="submit" class="save">설정 적용</button>
+        <p id="message" role="status"></p>
+      </form>
+    </details>
+    <footer>
+      <p>설정 기준: <span id="basis">600 km · 15 km/L · 1,700 원/L</span></p>
+      <p>연비와 주행 환경에 따라 실제 주유금액은 달라질 수 있어요.</p>
+      <p>시안에서는 설정을 이 화면에서만 적용하며, 재실행 시 초기화됩니다.</p>
+    </footer>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    let values = { a: 600, c: 15, d: 1700 };
+    const format = value => value.toLocaleString('ko-KR');
+    const parse = id => {
+      const text = $(id).value.trim();
+      return text === '' || !/^\d+(\.\d+)?$/.test(text) ? NaN : Number(text);
+    };
+    function calculate() {
+      const b = parse('remaining');
+      const valid = Number.isFinite(b) && b >= 0;
+      $('error').textContent = valid || $('remaining').value.trim() === '' ? '' : '남은 거리는 0 이상의 숫자로 입력하세요.';
+      $('cost').textContent = valid ? format(Math.round(Math.max(0, values.a - b) / values.c * values.d)) : '—';
+      $('currency').textContent = valid ? '원' : '';
+      $('liters').textContent = valid ? (Math.max(0, values.a - b) / values.c).toFixed(2) + ' L' : '—';
+      $('from').textContent = valid ? format(b) + ' km' : '거리 입력';
+      $('to').textContent = '목표 ' + format(values.a) + ' km';
+      $('fill').style.width = valid ? Math.min(100, b / values.a * 100) + '%' : '0%';
+    }
+    $('remaining').addEventListener('input', calculate);
+    $('settings-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const fields = [['maximum', '최대 거리'], ['efficiency', '연비'], ['price', '주유단가']];
+      for (const [id, label] of fields) {
+        const value = parse(id);
+        if (!Number.isFinite(value) || value <= 0) {
+          $('message').textContent = label + '는 0보다 큰 숫자로 입력하세요.';
+          $('message').style.color = 'var(--error)';
+          $(id).focus();
+          return;
+        }
+      }
+      values = { a: parse('maximum'), c: parse('efficiency'), d: parse('price') };
+      $('basis').textContent = format(values.a) + ' km · ' + format(values.c) + ' km/L · ' + format(values.d) + ' 원/L';
+      $('message').style.color = 'var(--green)';
+      $('message').textContent = '설정을 적용했습니다. 시안에서는 파일로 저장하지 않습니다.';
+      calculate();
+    });
+  </script>
+</body>
+</html>

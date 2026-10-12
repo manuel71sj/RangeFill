@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "메인 창. 앱 자체 command만 쓰므로 core/plugin 권한을 부여하지 않는다.",
+  "windows": ["main"],
+  "permissions": []
+}
