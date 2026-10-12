@@ -31,6 +31,7 @@
       --space-5: 24px; --space-6: 32px; --space-7: 48px;
       --radius-control: 6px; --radius-chip: 2px;
       --touch: 48px;
+      --gutter: 24px;
       --dur-press: 160ms; --dur-toggle: 200ms; --dur-gauge: 220ms;
       --ease-out: cubic-bezier(.23, 1, .32, 1);
 
@@ -56,10 +57,11 @@
     body { margin: 0; word-break: keep-all; }
     button, input { font: inherit; }
     button, summary { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    button, summary, input { touch-action: manipulation; }
     button, input { min-height: var(--touch); }
     :focus-visible { outline: 3px solid var(--color-ring); outline-offset: var(--space-1); }
 
-    .app { max-width: 480px; margin: 0 auto; padding: max(var(--space-5), env(safe-area-inset-top)) var(--space-5) max(var(--space-6), env(safe-area-inset-bottom)); }
+    .app { max-width: 480px; margin: 0 auto; padding: max(var(--space-5), env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) max(var(--space-6), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left)); }
     header { margin-bottom: var(--space-6); }
     .brand { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: .2px; }
     h1 { font-size: 26px; line-height: 1.3; letter-spacing: -.8px; margin: 0 0 var(--space-5); }
@@ -68,10 +70,10 @@
     .entry input { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--color-foreground); outline: none; font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums; }
     .unit { color: var(--color-muted-foreground); font-size: 15px; flex-shrink: 0; }
     .app > .entry { border-bottom: 2px solid var(--color-primary); margin-top: 6px; }
-    .app > .entry:focus-within { border-bottom-width: 5px; margin-bottom: -3px; }
+    .app > .entry:focus-within { box-shadow: 0 3px 0 0 var(--color-primary); }
     .app > .entry input { font-size: 56px; line-height: 1.1; }
     .hint { margin: 10px 0 var(--space-5); color: var(--color-muted-foreground); font-size: 13px; line-height: 1.6; }
-    #error { color: var(--color-destructive); font-size: 13px; margin: 0 0 var(--space-4); line-height: 1.6; }
+    #error { color: var(--color-destructive); font-size: 13px; margin: 0 0 var(--space-4); line-height: 1.6; overflow-wrap: anywhere; }
     #error:empty { display: none; }
 
     .result { margin: var(--space-2) 0 var(--space-5); }
@@ -111,12 +113,12 @@
     .save { width: 100%; border: 0; border-radius: var(--radius-control); background: var(--color-primary); color: var(--color-on-primary); font-size: 15px; font-weight: 600; margin: var(--space-5) 0 var(--space-3); transition: transform var(--dur-press) var(--ease-out); }
     .save:active { transform: scale(.97); }
     .save:disabled { opacity: .5; cursor: default; }
-    #message { margin: 0; min-height: 20px; font-size: 13px; line-height: 1.6; }
+    #message { margin: 0; min-height: 20px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
     #message.error { color: var(--color-destructive); }
     footer { border-top: 1px solid var(--color-border); margin-top: var(--space-5); padding-top: 18px; font-size: 12px; color: var(--color-muted-foreground); line-height: 1.8; }
     footer p { margin: 0; }
     @media (min-width: 600px) { .app { padding-top: var(--space-7); } }
-    @media (max-width: 350px) { .app { padding-inline: 18px; } .row .entry { flex-basis: 112px; } }
+    @media (max-width: 350px) { .app { --gutter: 18px; } .row .entry { flex-basis: 112px; } }
     @media (prefers-reduced-motion: reduce) {
       .have, .chevron, summary, .save { transition: none; }
       details[open] > :not(summary) { animation-name: reveal-fade; }
@@ -129,7 +131,7 @@
 </head>
 <body>
   <main class="app">
-    <header><span class="brand">RangeFill</span><span class="badge">디자인 시안</span></header>
+    <header><span class="brand" translate="no">RangeFill</span></header>
     <h1>얼마나 넣을까요?</h1>
     <label class="label" for="remaining">현재 남은 주행가능거리</label>
     <div class="entry"><input id="remaining" type="text" inputmode="decimal" value="150" placeholder="150" autocomplete="off" aria-describedby="remaining-hint error"><span class="unit">km</span></div>
@@ -139,8 +141,8 @@
       <div class="amount"><span id="cost">51,000</span><span class="won" id="currency">원</span></div>
       <p class="liters">필요 주유량 <strong id="liters">30.00 L</strong></p>
     </section>
-    <div class="gauge ready" id="gauge" aria-hidden="true">
-      <div class="tank"><div class="have" id="fill" style="transform:scaleX(.25)"></div></div>
+    <div class="gauge ready" id="gauge">
+      <div class="tank" aria-hidden="true"><div class="have" id="fill" style="transform:scaleX(.25)"></div></div>
       <div class="scale">
         <span class="have-label">남은 거리 <b id="from">150 km</b></span>
         <span class="need-label">채울 거리 <b id="to">450 km</b></span>
@@ -178,10 +180,10 @@
       const liters = Math.max(0, values.a - b) / values.c;
       $('cost').textContent = valid ? format(Math.round(liters * values.d)) : '—';
       $('currency').textContent = valid ? '원' : '';
-      $('liters').textContent = valid ? liters.toFixed(2) + ' L' : '—';
+      $('liters').textContent = valid ? liters.toFixed(2) + '\u00a0L' : '—';
       $('gauge').classList.toggle('ready', valid);
-      $('from').textContent = valid ? format(b) + ' km' : '—';
-      $('to').textContent = valid ? format(Math.max(0, values.a - b)) + ' km' : '—';
+      $('from').textContent = valid ? format(b) + '\u00a0km' : '—';
+      $('to').textContent = valid ? format(Math.max(0, values.a - b)) + '\u00a0km' : '—';
       $('fill').style.transform = 'scaleX(' + (valid ? Math.min(1, b / values.a) : 0) + ')';
     }
     $('remaining').addEventListener('input', calculate);

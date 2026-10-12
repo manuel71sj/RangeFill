@@ -8,7 +8,7 @@
 </head>
 <body>
   <main class="app">
-    <header><span class="brand">RangeFill</span></header>
+    <header><span class="brand" translate="no">RangeFill</span></header>
     <h1>얼마나 넣을까요?</h1>
     <label class="label" for="remaining">현재 남은 주행가능거리</label>
     <div class="entry"><input id="remaining" type="text" inputmode="decimal" placeholder="150" autocomplete="off" aria-describedby="remaining-hint error"><span class="unit">km</span></div>
@@ -18,8 +18,8 @@
       <div class="amount"><span id="cost">—</span><span class="won" id="currency"></span></div>
       <p class="liters">필요 주유량 <strong id="liters">—</strong></p>
     </section>
-    <div class="gauge" id="gauge" aria-hidden="true">
-      <div class="tank"><div class="have" id="fill"></div></div>
+    <div class="gauge" id="gauge">
+      <div class="tank" aria-hidden="true"><div class="have" id="fill"></div></div>
       <div class="scale">
         <span class="have-label">남은 거리 <b id="from">—</b></span>
         <span class="need-label">채울 거리 <b id="to">—</b></span>

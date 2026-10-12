@@ -31,11 +31,11 @@ function say(text: string, isError = false) {
 function show(quote: Quote | null, b: number) {
   $('cost').textContent = quote ? format(quote.cost) : '—';
   $('currency').textContent = quote ? '원' : '';
-  $('liters').textContent = quote ? `${quote.liters.toFixed(2)} L` : '—';
+  $('liters').textContent = quote ? `${quote.liters.toFixed(2)}\u00a0L` : '—';
   const max = quote && settings ? settings.a : null;
   $('gauge').classList.toggle('ready', max !== null);
-  $('from').textContent = max !== null ? `${format(b)} km` : '—';
-  $('to').textContent = max !== null ? `${format(Math.max(0, max - b))} km` : '—';
+  $('from').textContent = max !== null ? `${format(b)}\u00a0km` : '—';
+  $('to').textContent = max !== null ? `${format(Math.max(0, max - b))}\u00a0km` : '—';
   $('fill').style.transform = `scaleX(${max !== null ? Math.min(1, b / max) : 0})`;
 }
 
@@ -53,7 +53,7 @@ async function refresh() {
     try {
       quote = await invoke<Quote>('calculate', { settings, b });
     } catch (error) {
-      problem = `계산하지 못했습니다. (${error})`;
+      problem = `계산하지 못했습니다. 잠시 후 다시 입력해 보세요. (${error})`;
     }
     if (id !== latest) return;
   }
@@ -64,12 +64,13 @@ async function refresh() {
 function apply(next: Settings | null) {
   settings = next;
   $('basis').textContent = next
-    ? `${format(next.a)} km · ${format(next.c)} km/L · ${format(next.d)} 원/L`
+    ? `${format(next.a)}\u00a0km · ${format(next.c)}\u00a0km/L · ${format(next.d)}\u00a0원/L`
     : '저장된 설정 없음';
   void refresh();
 }
 
 remaining.addEventListener('input', () => void refresh());
+$('settings-form').addEventListener('input', () => say(''));
 
 $('settings-form').addEventListener('submit', async (event) => {
   event.preventDefault();
