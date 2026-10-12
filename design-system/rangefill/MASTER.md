@@ -49,7 +49,7 @@
 - 글자 굵기: 500 · 600 · 700만 쓴다(시스템 한글 서체에 없는 650·550 금지). 한글은 `word-break: keep-all`.
 - 모서리: 컨트롤 6px, 눈금 범례 칩 2px. 그림자 없음.
 - 터치 영역: 최소 48px(`--touch`). 입력과 버튼 모두 `min-height: 48px`.
-- 모션: 눌림 120ms, 펼침 200ms, 게이지 450ms(`cubic-bezier(.2,.8,.2,1)`). 움직임은 사용자 행동에 대한 반응에만 쓰고, `prefers-reduced-motion`에서는 끈다. 눌림은 투명도만 바꿔 레이아웃이 흔들리지 않는다.
+- 모션: 눌림 160ms, 펼침 200ms, 게이지 220ms. 곡선은 `--ease-out: cubic-bezier(.23, 1, .32, 1)` 하나만 쓴다(내장 `ease`·`ease-in` 금지). `transform`과 `opacity`만 움직인다(게이지는 `width`가 아니라 `scaleX`). 버튼 눌림은 `scale(.97)`. 금액 숫자처럼 키 입력마다 바뀌는 값은 애니메이션하지 않는다. `prefers-reduced-motion`에서는 이동과 크기 변화를 끄고 투명도 변화만 남긴다.
 
 ## 폼 규칙
 

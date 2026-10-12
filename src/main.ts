@@ -36,7 +36,7 @@ function show(quote: Quote | null, b: number) {
   $('gauge').classList.toggle('ready', max !== null);
   $('from').textContent = max !== null ? `${format(b)} km` : '—';
   $('to').textContent = max !== null ? `${format(Math.max(0, max - b))} km` : '—';
-  $('fill').style.width = max !== null ? `${Math.min(100, (b / max) * 100)}%` : '0%';
+  $('fill').style.transform = `scaleX(${max !== null ? Math.min(1, b / max) : 0})`;
 }
 
 async function refresh() {
