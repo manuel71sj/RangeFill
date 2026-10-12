@@ -1,6 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <rect width="1024" height="1024" rx="230" fill="#285d43"/>
-  <g transform="translate(192 192) scale(26.67)" fill="none" stroke="#f5f6f3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M7 7h5v5H7zM14 12h2a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0V9l-3-3m1 1v4h2"/>
+  <rect width="1024" height="1024" fill="#1c1c1a"/>
+  <defs><clipPath id="tank"><rect x="168" y="424" width="688" height="290" rx="36"/></clipPath></defs>
+  <g clip-path="url(#tank)">
+    <rect x="168" y="424" width="688" height="290" fill="#f4c21b"/>
+    <rect x="168" y="424" width="206.4" height="290" fill="#f0efea"/>
+    <g fill="#1c1c1a"><rect x="229.8" y="424" width="14" height="290"/><rect x="298.6" y="424" width="14" height="290"/><rect x="367.4" y="424" width="14" height="290"/><rect x="436.2" y="424" width="14" height="290"/><rect x="505.0" y="424" width="14" height="290"/><rect x="573.8" y="424" width="14" height="290"/><rect x="642.6" y="424" width="14" height="290"/><rect x="711.4" y="424" width="14" height="290"/><rect x="780.2" y="424" width="14" height="290"/></g>
   </g>
+  <path d="M315.4 306 H433.4 L374.4 394 Z" fill="#f0efea" stroke="#f0efea" stroke-width="16" stroke-linejoin="round"/>
 </svg>

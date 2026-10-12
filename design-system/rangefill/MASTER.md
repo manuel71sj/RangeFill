@@ -75,6 +75,13 @@ RangeFill
 
 정렬은 왼쪽 기준이고 한 열이다.
 
+## 앱 아이콘
+
+- 원본: `src-tauri/app-icon.svg`(1024, 모서리 둥글림 없는 꽉 찬 정사각형. iOS와 Android가 직접 마스크한다). 플랫폼별 파일은 `pnpm tauri icon src-tauri/app-icon.svg`로 만들고, `src-tauri/icons/app-icon.svg.png`는 생성된 iOS 1024px 아이콘(`AppIcon-512@2x.png`)을 복사한다.
+- 구성: 아스팔트 `#1C1C1A` 바탕에 앱 화면의 게이지를 그대로 쓴다. 10칸 눈금 막대에서 남은 구간은 `#F0EFEA`, 채울 구간은 연료 노랑 `#F4C21B`이고, 두 구간의 경계(30%)를 가리키는 바늘(역삼각형)을 얹었다.
+- 막대 폭은 화면의 약 67%로 두어 Android 적응형 아이콘 안전 영역 안에 들어간다. 글자와 그라데이션, 그림자는 쓰지 않는다.
+- Android 적응형 배경색(`ic_launcher_background`)은 `#1C1C1A`.
+
 ## 금지
 
 - 노랑을 장식이나 버튼 색으로 쓰지 않는다(연료 = 채울 구간 전용).
