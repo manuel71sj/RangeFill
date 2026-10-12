@@ -17,6 +17,7 @@
     "android:build": "tauri android build"
   },
   "dependencies": {
+    "@fontsource/barlow-condensed": "^5.3.0",
     "@tauri-apps/api": "^2"
   },
   "devDependencies": {

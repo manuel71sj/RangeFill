@@ -8,29 +8,30 @@
 </head>
 <body>
   <main class="app">
-    <header>
-      <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M7 7h5v5H7zM14 12h2a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0V9l-3-3m1 1v4h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <span class="brand">RangeFill</span>
-    </header>
-    <h1>이번엔 얼마를 넣을까요?</h1>
-    <p class="intro">남은 거리를 입력하면<br>가득 채우는 데 필요한 금액을 알려드려요.</p>
+    <header><span class="brand">RangeFill</span></header>
+    <h1>얼마나 넣을까요?</h1>
     <label class="label" for="remaining">현재 남은 주행가능거리</label>
-    <div class="entry"><input id="remaining" type="text" inputmode="decimal" placeholder="예: 150" autocomplete="off" aria-describedby="remaining-hint error"><span class="unit">km</span></div>
+    <div class="entry"><input id="remaining" type="text" inputmode="decimal" placeholder="150" autocomplete="off" aria-describedby="remaining-hint error"><span class="unit">km</span></div>
     <p class="hint" id="remaining-hint">차량 계기판에 표시된 거리를 입력하세요.</p>
     <p id="error" role="alert"></p>
     <section class="result" aria-label="주유 계산 결과" aria-live="polite" aria-atomic="true">
-      <p class="eyebrow">예상 주유금액</p>
       <div class="amount"><span id="cost">—</span><span class="won" id="currency"></span></div>
-      <div class="result-row"><span>필요 주유량</span><strong id="liters">—</strong></div>
+      <p class="liters">필요 주유량 <strong id="liters">—</strong></p>
     </section>
-    <div class="journey" aria-hidden="true"><span id="from">거리 입력</span><div class="track"><div class="fill" id="fill"></div></div><span id="to">목표 —</span></div>
+    <div class="gauge" id="gauge" aria-hidden="true">
+      <div class="tank"><div class="have" id="fill"></div></div>
+      <div class="scale">
+        <span class="have-label">남은 거리 <b id="from">—</b></span>
+        <span class="need-label">채울 거리 <b id="to">—</b></span>
+      </div>
+    </div>
     <details id="settings">
       <summary>계산 기준 설정<span class="chevron" aria-hidden="true">⌄</span></summary>
       <p class="settings-note">최대 거리와 연비는 차량에 맞게 설정하세요.<br>주유단가는 방문할 주유소의 가격으로 바꿔주세요.</p>
       <form id="settings-form" novalidate>
-        <div class="field"><label class="label" for="maximum">최대 주유 시 주행가능거리</label><div class="entry"><input id="maximum" type="text" inputmode="decimal" placeholder="예: 600" autocomplete="off"><span class="unit">km</span></div></div>
-        <div class="field"><label class="label" for="efficiency">연비</label><div class="entry"><input id="efficiency" type="text" inputmode="decimal" placeholder="예: 15" autocomplete="off"><span class="unit">km/L</span></div></div>
-        <div class="field"><label class="label" for="price">주유단가</label><div class="entry"><input id="price" type="text" inputmode="decimal" placeholder="예: 1700" autocomplete="off"><span class="unit">원/L</span></div></div>
+        <div class="row"><label class="label" for="maximum">최대 주유 시 주행가능거리</label><div class="entry"><input id="maximum" type="text" inputmode="decimal" placeholder="600" autocomplete="off"><span class="unit">km</span></div></div>
+        <div class="row"><label class="label" for="efficiency">연비</label><div class="entry"><input id="efficiency" type="text" inputmode="decimal" placeholder="15" autocomplete="off"><span class="unit">km/L</span></div></div>
+        <div class="row"><label class="label" for="price">주유단가</label><div class="entry"><input id="price" type="text" inputmode="decimal" placeholder="1700" autocomplete="off"><span class="unit">원/L</span></div></div>
         <button type="submit" class="save" id="save" disabled>설정 저장</button>
         <p id="message" role="status"></p>
       </form>

@@ -1,4 +1,6 @@
 import { invoke } from '@tauri-apps/api/core';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
 import './style.css';
 
 type Settings = { a: number; c: number; d: number };
@@ -30,9 +32,11 @@ function show(quote: Quote | null, b: number) {
   $('cost').textContent = quote ? format(quote.cost) : '—';
   $('currency').textContent = quote ? '원' : '';
   $('liters').textContent = quote ? `${quote.liters.toFixed(2)} L` : '—';
-  $('from').textContent = quote ? `${format(b)} km` : '거리 입력';
-  $('to').textContent = settings ? `목표 ${format(settings.a)} km` : '목표 —';
-  $('fill').style.width = quote && settings ? `${Math.min(100, (b / settings.a) * 100)}%` : '0%';
+  const max = quote && settings ? settings.a : null;
+  $('gauge').classList.toggle('ready', max !== null);
+  $('from').textContent = max !== null ? `${format(b)} km` : '—';
+  $('to').textContent = max !== null ? `${format(Math.max(0, max - b))} km` : '—';
+  $('fill').style.width = max !== null ? `${Math.min(100, (b / max) * 100)}%` : '0%';
 }
 
 async function refresh() {
