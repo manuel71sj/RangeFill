@@ -13,7 +13,7 @@
 - Rust(rustup) stable
 
 iOS (macOS 전용)
-- Xcode와 command line tools, CocoaPods
+- Xcode와 command line tools, CocoaPods, XcodeGen, libimobiledevice
 - `rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios`
 - 실기기 실행·배포에는 Apple 개발자 팀 ID가 필요합니다(`APPLE_DEVELOPMENT_TEAM` 환경변수 또는 `tauri.conf.json`의 `bundle > iOS > developmentTeam`).
 
@@ -28,17 +28,17 @@ Android
 
 ```sh
 pnpm install
-pnpm ios:init        # macOS에서만. src-tauri/gen/apple 생성
-pnpm android:init    # src-tauri/gen/android 생성
+pnpm ios:init        # iOS 프로젝트 재생성이 필요한 경우, macOS에서만 실행
+pnpm android:init    # Android 프로젝트 재생성이 필요한 경우
 pnpm tauri icon src-tauri/app-icon.svg   # init 이후 실행: gen/ 프로젝트의 아이콘까지 채움
 ```
 
 - 원본 아이콘은 `src-tauri/app-icon.svg`이며, Rust 컴파일에 사용하는 PNG는 `src-tauri/icons/app-icon.svg.png`입니다. 모바일 프로젝트 초기화 후 `tauri icon` 명령으로 플랫폼별 아이콘을 생성하세요.
 
 - 앱 식별자는 `src-tauri/tauri.conf.json`의 `identifier`(`com.manuel71.rangefill`)입니다. 모바일 프로젝트는 이 값으로 생성되므로 바꾸려면 init 전에 바꾸세요.
-- 최소 지원 OS는 Tauri 2 기본값을 그대로 씁니다. 바꾸려면 init 후 생성된 네이티브 프로젝트나 Tauri 설정에서 지정하세요.
-- `gen/apple`, `gen/android`는 생성 후 커밋하는 것이 Tauri 권장입니다.
-- `tauri icon`이 SVG 입력을 받지 않는 버전이면 1024×1024 PNG를 만들어 넘기세요.
+- 생성된 프로젝트의 최소 지원 OS는 iOS 15와 Android 7(API 24)입니다.
+- `gen/apple`, `gen/android`와 플랫폼별 아이콘이 저장소에 포함되어 있습니다.
+- iOS 프로젝트는 현재 개발 팀으로 생성되어 있습니다. 다른 팀으로 빌드하려면 Xcode의 Signing & Capabilities에서 팀을 선택하고 `project.yml`의 `DEVELOPMENT_TEAM`도 맞추세요.
 
 ## 개발·빌드
 
@@ -48,6 +48,18 @@ pnpm android:dev     # Android 에뮬레이터/기기, HMR
 pnpm ios:build       # iOS 릴리스 빌드
 pnpm android:build   # Android 릴리스 빌드(APK/AAB)
 ```
+
+## iPhone에 개발용 앱 설치
+
+```sh
+pnpm tauri ios build --debug --ci --target aarch64 --export-method debugging --archive-only
+xcrun devicectl device install app --device "<iPhone UDID>" src-tauri/gen/apple/build/rangefill_iOS.xcarchive/Products/Applications/RangeFill.app
+xcrun devicectl device process launch --device "<iPhone UDID>" com.manuel71.rangefill
+```
+
+기기에 개발자 모드가 켜져 있어야 합니다. 설치 후 프로필 신뢰 문제로 실행이 거부되면
+iPhone의 설정 → 일반 → VPN 및 기기 관리에서 해당 개발자 앱을 신뢰한 뒤 다시 실행하세요.
+이 빌드는 화면을 앱에 포함하므로 개발 서버 없이 사용할 수 있습니다.
 
 ## 검증
 
