@@ -61,6 +61,30 @@ xcrun devicectl device process launch --device "<iPhone UDID>" com.manuel71.rang
 iPhone의 설정 → 일반 → VPN 및 기기 관리에서 해당 개발자 앱을 신뢰한 뒤 다시 실행하세요.
 이 빌드는 화면을 앱에 포함하므로 개발 서버 없이 사용할 수 있습니다.
 
+### 7일 만료 자동 갱신 (무료 Apple 계정)
+
+무료 계정 서명은 7일 뒤 만료됩니다. `scripts/ios-refresh.sh`는 마지막 설치본 만료가 2일 안쪽이면
+이 앱의 캐시 프로파일을 지우고 위 명령으로 다시 빌드해 덮어 설치합니다(설정은 유지). 아래처럼
+launchd에 등록하면 매일 10시에 확인하고, Mac이 잠들어 있었으면 깨어날 때 실행됩니다.
+Mac에 Xcode 계정이 로그인돼 있고, iPhone이 USB나 같은 네트워크로 연결돼 있어야 설치됩니다.
+
+```sh
+UDID="<iPhone UDID>"   # xcrun devicectl list devices
+mkdir -p ~/Library/Logs/RangeFill
+sed -e "s|__REPO__|$PWD|" -e "s|__HOME__|$HOME|g" -e "s|__UDID__|$UDID|" \
+  scripts/com.manuel71.rangefill.refresh.plist > ~/Library/LaunchAgents/com.manuel71.rangefill.refresh.plist
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.manuel71.rangefill.refresh.plist
+launchctl kickstart gui/$(id -u)/com.manuel71.rangefill.refresh   # 지금 한 번 실행
+tail -f ~/Library/Logs/RangeFill/refresh.log
+```
+
+해제:
+
+```sh
+launchctl bootout gui/$(id -u)/com.manuel71.rangefill.refresh
+rm ~/Library/LaunchAgents/com.manuel71.rangefill.refresh.plist
+```
+
 ## 검증
 
 ```sh
